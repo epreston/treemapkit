@@ -49,6 +49,10 @@
 	[UIView commitAnimations];
 }
 
+- (void)treemapView:(TreemapView *)treemapView updateCell:(TreemapViewCell *)cell forIndex:(NSInteger)index forRect:(CGRect)rect {
+	[self updateCell:cell forIndex:index];
+}
+
 #pragma mark -
 #pragma mark TreemapView data source
 
@@ -78,11 +82,24 @@
 	return cell;
 }
 
-- (void)treemapView:(TreemapView *)treemapView updateCell:(TreemapViewCell *)cell forIndex:(NSInteger)index forRect:(CGRect)rect {
-	[self updateCell:cell forIndex:index];
-}
 
 #pragma mark -
+
+- (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    /*
+    * resize rectangles with animation
+    */
+    [UIView beginAnimations:@"reload" context:nil];
+    [UIView setAnimationDuration:0.5];
+
+    [(TreemapView *)self.view reloadData];
+
+    [UIView commitAnimations];
+}
+
+- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return YES;
+}
 
 - (void)didReceiveMemoryWarning {
 	[super didReceiveMemoryWarning];
