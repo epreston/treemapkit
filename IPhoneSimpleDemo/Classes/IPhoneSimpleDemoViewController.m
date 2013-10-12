@@ -7,8 +7,8 @@
 #pragma mark -
 
 - (void)updateCell:(TreemapViewCell *)cell forIndex:(NSInteger)index {
-	NSNumber *val = [[fruits objectAtIndex:index] valueForKey:@"value"];
-	cell.textLabel.text = [[fruits objectAtIndex:index] valueForKey:@"name"];
+	NSNumber *val = [fruits[index] valueForKey:@"value"];
+	cell.textLabel.text = [fruits[index] valueForKey:@"name"];
 	cell.valueLabel.text = [val stringValue];
 	cell.backgroundColor = [UIColor colorWithHue:(float)index / (fruits.count + 3)
 									  saturation:1 brightness:0.75 alpha:1];
@@ -21,8 +21,8 @@
 	/*
 	 * change the value
 	 */
-	NSDictionary *dic = [fruits objectAtIndex:index];
-	[dic setValue:[NSNumber numberWithInt:[[dic valueForKey:@"value"] intValue] + 300]
+	NSDictionary *dic = fruits[index];
+	[dic setValue:@([[dic valueForKey:@"value"] intValue] + 300)
 		   forKey:@"value"];
 
 	/*
@@ -41,7 +41,7 @@
 	[UIView beginAnimations:@"highlight" context:nil];
 	[UIView setAnimationDuration:1.0];
 
-	TreemapViewCell *cell = (TreemapViewCell *)[self.view.subviews objectAtIndex:index];
+	TreemapViewCell *cell = (TreemapViewCell *)(self.view.subviews)[index];
 	UIColor *color = cell.backgroundColor;
 	[cell setBackgroundColor:[UIColor whiteColor]];
 	[cell setBackgroundColor:color];
@@ -67,19 +67,22 @@
 			NSMutableDictionary *mDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 			[fruits addObject:mDic];
 		}
+        
+        [array release];
 	}
 
 	NSMutableArray *values = [NSMutableArray arrayWithCapacity:fruits.count];
 	for (NSDictionary *dic in fruits) {
 		[values addObject:[dic valueForKey:@"value"]];
 	}
+    
 	return values;
 }
 
 - (TreemapViewCell *)treemapView:(TreemapView *)treemapView cellForIndex:(NSInteger)index forRect:(CGRect)rect {
 	TreemapViewCell *cell = [[TreemapViewCell alloc] initWithFrame:rect];
 	[self updateCell:cell forIndex:index];
-	return cell;
+	return [cell autorelease];
 }
 
 

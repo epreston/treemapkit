@@ -7,7 +7,7 @@
 
 - (void)calcNodePositions:(CGRect)rect nodes:(NSArray *)nodes width:(CGFloat)width height:(CGFloat)height depth:(NSInteger)depth withCreate:(BOOL)createNode {
     if (nodes.count <= 1) {
-        NSInteger index = [[[nodes objectAtIndex:0] valueForKey:@"index"] integerValue];
+        NSInteger index = [[nodes[0] valueForKey:@"index"] integerValue];
         if (createNode || index >= self.subviews.count) {
             TreemapViewCell *cell = [dataSource treemapView:self cellForIndex:index forRect:rect];
             cell.index = index;
@@ -15,7 +15,7 @@
             [self addSubview:cell];
         }
         else {
-            TreemapViewCell *cell = [self.subviews objectAtIndex:index];
+            TreemapViewCell *cell = (self.subviews)[index];
             cell.frame = rect;
             if ([delegate respondsToSelector:@selector(treemapView:updateCell:forIndex:forRect:)])
                 [delegate treemapView:self updateCell:cell forIndex:index forRect:rect];
@@ -26,7 +26,7 @@
 
     CGFloat total = 0;
     for (NSDictionary *dic in nodes) {
-        total += [[dic objectForKey:@"value"] floatValue];
+        total += [dic[@"value"] floatValue];
     }
     CGFloat half = total / 2.0;
 
@@ -46,7 +46,7 @@
                 m = i;
                 break;
             }
-            total += [[[nodes objectAtIndex:i] objectForKey:@"value"] floatValue];
+            total += [nodes[i][@"value"] floatValue];
         }
         if (m < 1) m = 1;
     }
@@ -56,11 +56,11 @@
 
     CGFloat aTotal = 0.0;
     for (NSDictionary *dic in aArray) {
-        aTotal += [[dic objectForKey:@"value"] floatValue];
+        aTotal += [dic[@"value"] floatValue];
     }
     CGFloat bTotal = 0.0;
     for (NSDictionary *dic in bArray) {
-        bTotal += [[dic objectForKey:@"value"] floatValue];
+        bTotal += [dic[@"value"] floatValue];
     }
 
     CGFloat aRatio;
@@ -108,9 +108,9 @@
     NSArray *values = [dataSource valuesForTreemapView:self];
     NSMutableArray *nodes = [NSMutableArray arrayWithCapacity:values.count];
     for (NSInteger i = 0; i < values.count; i++) {
-        NSNumber *value = [values objectAtIndex:i];
+        NSNumber *value = values[i];
         NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:2];
-        [dic setValue:[NSNumber numberWithInt:i] forKey:@"index"];
+        [dic setValue:@(i) forKey:@"index"];
         [dic setValue:value forKey:@"value"];
         [nodes addObject:dic];
     }
